@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import math 
-import matplotlib.pyplot as plt
 
 def MyHE(img):
     img = img.astype(np.uint8)
@@ -83,16 +82,12 @@ def MyHE_HSI(HSI):
 if __name__ == '__main__':
     img=cv2.imread('ImagesSet/histeq1.jpg',0)
     cv2.imshow('img', img)
-    cv2.waitKey(0)
     gray= MyHE(img)[0]
     cv2.imshow('gray', gray)
-    cv2.waitKey(0)
     img=cv2.imread('ImagesSet/histeqColor.jpg',1)
     cv2.imshow('img', img)
-    cv2.waitKey(0)
     rgb = MyHE_RGB(img)
     cv2.imshow('rgb', rgb)
-    cv2.waitKey(0)
     HSI = rgb2hsi(img)
     hsi = MyHE_HSI(HSI)
     cv2.imshow('hsi', hsi)
