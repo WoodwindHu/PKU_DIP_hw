@@ -3,19 +3,42 @@ import numpy as np
 
 
 def MyErosion(img, kernel):
-    result = cv2.erode(img, kernel)
-    return result
+    height, width = img.shape
+    kernel_sum = np.sum(kernel)
+    # convolution
+    result = np.zeros((height, width))
+    for i in range(height-2):
+        for j in range(width-2):
+            result[i+1,j+1] = (np.sum(img[i:i+3,j:j+3]*kernel[::-1,::-1]) == (kernel_sum * 255))
+    return (np.clip(result, 0, 1) * 255).astype(np.uint8)
 
 def MyDilation(img, kernel):
-    result = cv2.dilate(img, kernel)
-    return result
+    height, width = img.shape
+    kernel_sum = np.sum(kernel)
+    # convolution
+    result = np.zeros((height, width))
+    for i in range(height-2):
+        for j in range(width-2):
+            result[i+1,j+1] = (np.sum(img[i:i+3,j:j+3]*kernel[::-1,::-1]) > 0)
+    return (np.clip(result, 0, 1) * 255).astype(np.uint8)
 
 def MyOpening(img, kernel):
-	return cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+	return MyDilation(MyErosion(img, kernel), kernel)
 
 def MyClosing(img, kernel):
-	return cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+	return MyErosion(MyDilation(img, kernel), kernel)
 
 
 if __name__ == '__main__':
-    pass
+    img = cv2.imread('ImagesSet\word_bw.bmp', 0)
+    cv2.imshow('img', img)
+    kernel = np.random.randint(0, 2, (3, 3)).astype(np.uint8)
+    erosion = MyErosion(img, kernel)
+    cv2.imshow('erosion', erosion)
+    dilation = MyDilation(img, kernel)
+    cv2.imshow('dilation', dilation)
+    opening = MyOpening(img, kernel)
+    cv2.imshow('opening', opening)
+    Closing = MyClosing(img, kernel)
+    cv2.imshow('Closing', Closing)
+    cv2.waitKey(0)

@@ -43,6 +43,7 @@ def upload():
     else:
         return render_template("new_error.html", message="The selected file is not supported"), 400
 
+
     # save file
     local_time = time.localtime(time.time())
 
@@ -54,6 +55,15 @@ def upload():
         os.remove(destination)
     print("File saved to:", destination)
     upload.save(destination)
+
+    if ext == ".tif":
+        img = cv2.imread(destination)
+        filename = os.path.splitext(filename)[0]+".png"
+        destination = "/".join([target, filename])
+        if os.path.isfile(destination):
+            os.remove(destination)
+        print("File saved to:", destination)
+        cv2.imwrite(destination, img)
 
     # forward to processing page
     return render_template("new_processing.html", image_name=filename)
@@ -79,31 +89,40 @@ def M_T():
     kernel = np.random.randint(0, 2, (3, 3)).astype(np.uint8)
     print(kernel)
 
-    # check mode
-    if mode == 'Erosion':
-        img = Morphological_Transformation.MyErosion(img, kernel)
-    elif mode == 'Dilation':
-        img = Morphological_Transformation.MyDilation(img, kernel)
-    elif mode == 'Opening':
-        img = Morphological_Transformation.MyOpening(img, kernel)
-    elif mode == 'Closing':
-        img = Morphological_Transformation.MyClosing(img, kernel)
-    else:
-        return render_template("new_error.html", message="Invalid mode (vertical or horizontal)"), 400
+    
+    erosion_img = Morphological_Transformation.MyErosion(img, kernel)
 
-    result_name = "{}-{}".format(mode, filename)
-    destination = "/".join([target, result_name])
+    dilation_img = Morphological_Transformation.MyDilation(img, kernel)
+
+    opening_img = Morphological_Transformation.MyOpening(img, kernel)
+
+    closing_img = Morphological_Transformation.MyClosing(img, kernel)
+
+    erosion_name = "erosion-{}".format(filename)
+    destination = "/".join([target, erosion_name])
     if os.path.isfile(destination):
         os.remove(destination)
-    cv2.imwrite(destination, img)
+    cv2.imwrite(destination, erosion_img)
 
-    opencv_name = "opencv-{}-{}".format(mode, filename)
-    destination = "/".join([target, opencv_name])
+    dilation_name = "dilation-{}".format(filename)
+    destination = "/".join([target, dilation_name])
     if os.path.isfile(destination):
         os.remove(destination)
-    cv2.imwrite(destination, img)
+    cv2.imwrite(destination, dilation_img)
 
-    kernel_name = "kernel-{}-{}".format(mode, filename)
+    opening_name = "opening-{}".format(filename)
+    destination = "/".join([target, opening_name])
+    if os.path.isfile(destination):
+        os.remove(destination)
+    cv2.imwrite(destination, opening_img)
+
+    closing_name = "closing-{}".format(filename)
+    destination = "/".join([target, closing_name])
+    if os.path.isfile(destination):
+        os.remove(destination)
+    cv2.imwrite(destination, closing_img)
+
+    kernel_name = "kernel-{}".format(filename)
     destination = "/".join([target, kernel_name])
     if os.path.isfile(destination):
         os.remove(destination)
@@ -111,7 +130,7 @@ def M_T():
                         interpolation=cv2.INTER_NEAREST)
     cv2.imwrite(destination, kernel)
 
-    return render_template("MT_result.html", original_name=filename, kernel_name=kernel_name, opencv_name=opencv_name, result_name=result_name)
+    return render_template("MT_result.html", original_name=filename, kernel_name=kernel_name, erosion_name=erosion_name, dilation_name=dilation_name, opening_name=opening_name, closing_name=closing_name)
 
 @app.route("/H_E", methods=["POST"])
 def H_E():
@@ -209,20 +228,20 @@ def L_F():
     # check mode
     if len(img.shape) == 3:
         return render_template("new_error.html", message="Invalid image (color)"), 400
-    filtered_img = Laplacian_Filter.MyLaplacian(img)
-    filtered_img = (np.clip(filtered_img, 0, 255)).astype(np.uint8)
+    filtered_img_ = Laplacian_Filter.MyLaplacian(img)
+    filtered_img = (np.clip(filtered_img_, 0, 255)).astype(np.uint8)
     filtered_name = "Filtered-{}-{}".format(mode, filename)
     destination = "/".join([target, filtered_name])
     if os.path.isfile(destination):
         os.remove(destination)
     cv2.imwrite(destination, filtered_img)
 
-    result = (np.clip(img - filtered_img, 0, 255)).astype(np.uint8)
+    result = (np.clip(img - filtered_img_, 0, 255)).astype(np.uint8)
     enhanced_name = "Enhanced-{}-{}".format(mode, filename)
     destination = "/".join([target, enhanced_name])
     if os.path.isfile(destination):
         os.remove(destination)
-    cv2.imwrite(destination, filtered_img)
+    cv2.imwrite(destination, result)
 
     return render_template("LF_result.html", original_name=filename, filtered_name=filtered_name, enhanced_name=enhanced_name)
     
