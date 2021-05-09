@@ -75,6 +75,14 @@
         </div>
 
         <div style="text-align:left;">
+            <h5>Laplacian Enhancement</h5>
+                <form id="form-LF" action="{{ url_for('L_F') }}" method="POST" enctype="multipart/form-data">        
+                <button id="Laplacian-Enhancement" class="primary-btn" type="submit" name="mode" value="Laplacian-Enhancement">Laplacian Enhancement</button>
+                <input type="text" class="hidden" name="image" value="{{ image_name }}">  
+            </form>
+        </div>
+
+        <div style="text-align:left;">
             <h5>Morphological Transformation</h5>
                 <form id="form-MT" action="{{ url_for('M_T') }}" method="POST" enctype="multipart/form-data">        
                 <button id="Erosion" class="primary-btn" type="submit" name="mode" value="Erosion">Erosion</button>

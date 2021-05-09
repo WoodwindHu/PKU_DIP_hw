@@ -4,7 +4,7 @@ from flask import Flask, request, render_template, send_from_directory
 import os
 from PIL import Image
 #从文件夹algorithm引入算法接口（Morphological_Transformation为形态学处理的代码）
-from algorithm import Morphological_Transformation, Fast_Fourier_Transform, Histogram_Equalization
+from algorithm import Morphological_Transformation, Fast_Fourier_Transform, Histogram_Equalization, Laplacian_Filter
 import numpy as np
 import cv2
 import time
@@ -188,6 +188,44 @@ def H_E():
     else:
         return render_template("new_error.html", message="Invalid mode (vertical or horizontal)"), 400
 
+
+@app.route("/L_F", methods=["POST"])
+def L_F():
+
+    # retrieve parameters from html form
+    mode = request.form['mode']
+    filename = request.form['image']
+
+    # open and process image
+    target = os.path.join(APP_ROOT, 'static/temp_images')
+    destination = "/".join([target, filename])
+
+    img = cv2.imread(destination, 1)
+    if (img[:, :, 0] == img[:, :, 1]).all() and (img[:, :, 1] == img[:, :, 2]).all() and (img[:, :, 0] == img[:, :, 2]).all():
+        img = cv2.imread(destination, 0)
+
+    print(img.shape, img.dtype)
+
+    # check mode
+    if len(img.shape) == 3:
+        return render_template("new_error.html", message="Invalid image (color)"), 400
+    filtered_img = Laplacian_Filter.MyLaplacian(img)
+    filtered_img = (np.clip(filtered_img, 0, 255)).astype(np.uint8)
+    filtered_name = "Filtered-{}-{}".format(mode, filename)
+    destination = "/".join([target, filtered_name])
+    if os.path.isfile(destination):
+        os.remove(destination)
+    cv2.imwrite(destination, filtered_img)
+
+    result = (np.clip(img - filtered_img, 0, 255)).astype(np.uint8)
+    enhanced_name = "Enhanced-{}-{}".format(mode, filename)
+    destination = "/".join([target, enhanced_name])
+    if os.path.isfile(destination):
+        os.remove(destination)
+    cv2.imwrite(destination, filtered_img)
+
+    return render_template("LF_result.html", original_name=filename, filtered_name=filtered_name, enhanced_name=enhanced_name)
+    
     
 
 # retrieve file from 'static/temp_images' directory
