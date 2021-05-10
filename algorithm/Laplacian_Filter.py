@@ -28,9 +28,16 @@ def MyLaplacian(img):
     return result 
 
 def MyLaplacianEnhance(img):
-    result = MyLaplacian(img)
+    if len(img.shape) == 2:
+        result = MyLaplacian(img)
+    else:
+        result = np.zeros_like(img)
+        result[0] = MyLaplacian(img[0])
+        result[1] = MyLaplacian(img[1])
+        result[2] = MyLaplacian(img[2])
     result = (np.clip(img - result, 0, 255)).astype(np.uint8)
     return result
+    
 
 if __name__ == '__main__':
     img = cv2.imread('ImagesSet\moon.tif', 0)

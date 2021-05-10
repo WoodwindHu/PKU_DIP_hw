@@ -9,7 +9,10 @@ def main(args):
         img = cv2.imread(args.input, 0)
 
     if args.mode == 'Erosion' or args.mode == 'Dilation' or args.mode == 'Closing' or args.mode == 'Opening':       
-        kernel = np.random.randint(0, 2, (3, 3)).astype(np.uint8)
+        if args.rand_kernel:
+            kernel = np.random.randint(0, 2, (3, 3)).astype(np.uint8)
+        else:
+            kernel = np.array([[1,1,1], [1, 1, 1], [1, 1, 1]])
         print(kernel)
 
     if args.mode == 'Grayscale':
@@ -20,6 +23,12 @@ def main(args):
         HSI_img = Histogram_Equalization.rgb2hsi(img)
         result = Histogram_Equalization.MyHE_HSI(HSI_img)
     elif args.mode == 'LE':
+        if len(img.shape) == 3:
+            HSI_img = Histogram_Equalization.rgb2hsi(img)
+            dir, filename = os.path.split(args.input)
+            img = (np.clip(HSI_img[:,:,2], 0, 255)).astype(np.uint8)
+            args.input = os.path.join(dir, 'intensity-{}'.format(filename))
+            cv2.imwrite(args.input, img)
         result = Laplacian_Filter.MyLaplacianEnhance(img)
     elif args.mode == 'Erosion':
         result = Morphological_Transformation.MyErosion(img, kernel)

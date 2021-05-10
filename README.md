@@ -9,12 +9,12 @@ conda install -c conda-forge flask opencv pillow numpy matplotlib
 ```
 
 ## Usage
-演示界面：
+### 演示界面：
 ```
 conda activate DIP
 python app.py
 ```
-运行图像处理源代码：
+### 运行图像处理源代码：
 ```
 conda activate DIP
 python main.py -h
@@ -32,11 +32,14 @@ optional arguments:
   -m MODE, --mode MODE  DIP mode: Grayscale|RGB|HSI|LE|Erosion|Dilation|Closing|Opening
   -o OUTPUT, --output OUTPUT
                         output image filename, default = None
+  --rand_kernel RAND_KERNEL
+                        use random kernel in morphological transformation, default = False
 ```
-运行`python main.py -i INPUT -m MODE`即可运行图像处理源代码，其中`INPUT`为输入图片路径，`MODE`为需要进行的图像处理的操作：进行直方图均衡化时`MODE`可以选择`Grayscale`、`RGB`和`HSI`；使用锐化滤波器时`MODE`选择`LE`；进行形态学变换时`MODE`选择`Erosion`、`Dilation`、`Closing`和`Opening`。
+运行`python main.py -i INPUT -m MODE`即可运行图像处理源代码，其中`INPUT`为输入图片路径，`MODE`为需要进行的图像处理的操作：进行直方图均衡化时`MODE`可以选择`Grayscale`、`RGB`和`HSI`；使用锐化滤波器时`MODE`选择`LE`；进行形态学变换时`MODE`选择`Erosion`、`Dilation`、`Closing`和`Opening`，此时设置`--rand_kernel True`可以使用随机kernel，否则kernel默认为3*3全1kernel。
 
-运行所有演示图片：
+### 运行所有演示图片：
 ```
 conda activate DIP
 bash ./run.sh
 ```
+输出图像将被保存在ImagesSet/中，子文件夹分别对应不同的操作。

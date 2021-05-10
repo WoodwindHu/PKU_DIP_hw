@@ -9,7 +9,7 @@ def MyErosion(img, kernel):
     result = np.zeros((height, width))
     for i in range(height-2):
         for j in range(width-2):
-            result[i+1,j+1] = (np.sum(img[i:i+3,j:j+3]*kernel[::-1,::-1]) == (kernel_sum * 255))
+            result[i+1,j+1] = (np.sum(img[i:i+3,j:j+3]*kernel[::,::]) == (kernel_sum * 255))
     return (np.clip(result, 0, 1) * 255).astype(np.uint8)
 
 def MyDilation(img, kernel):

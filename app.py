@@ -38,7 +38,7 @@ def upload():
 
     # file support verification
     ext = os.path.splitext(filename)[1]
-    if (ext == ".jpg") or (ext == ".png") or (ext == ".bmp") or (ext == ".tif") or (ext == ".npy"):
+    if (ext == ".jpg") or (ext == ".png") or (ext == ".bmp") or (ext == ".tif") or (ext == ".npy") or (ext == '.jpeg'):
         print("File accepted")
     else:
         return render_template("new_error.html", message="The selected file is not supported"), 400
@@ -225,10 +225,14 @@ def L_F():
 
     print(img.shape, img.dtype)
 
-    # check mode
-    if len(img.shape) == 3:
-        return render_template("new_error.html", message="Invalid image (color)"), 400
-    filtered_img_ = Laplacian_Filter.MyLaplacian(img)
+    filtered_img_ = np.zeros_like(img)
+    if len(img.shape) == 2:
+        filtered_img_ = Laplacian_Filter.MyLaplacian(img)
+    else:
+        filtered_img_[0] = Laplacian_Filter.MyLaplacian(img[0])
+        filtered_img_[1] = Laplacian_Filter.MyLaplacian(img[1])
+        filtered_img_[2] = Laplacian_Filter.MyLaplacian(img[2])
+
     filtered_img = (np.clip(filtered_img_, 0, 255)).astype(np.uint8)
     filtered_name = "Filtered-{}-{}".format(mode, filename)
     destination = "/".join([target, filtered_name])
