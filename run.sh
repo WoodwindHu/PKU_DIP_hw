@@ -47,16 +47,16 @@ python main.py -i ImagesSet/histeq11.jpeg -m LE
 python main.py -i ImagesSet/histeq12.jpeg -m LE
 python main.py -i ImagesSet/histeq13.jpeg -m LE
 python main.py -i ImagesSet/histeq14.jpeg -m LE
-python main.py -i ImagesSet/intensity-histeqColor1.jpg -m RGB
-python main.py -i ImagesSet/intensity-histeqColor2.jpg -m RGB
-python main.py -i ImagesSet/intensity-histeqColor3.png -m RGB
-python main.py -i ImagesSet/intensity-histeqColor4.jpeg -m RGB
-python main.py -i ImagesSet/intensity-histeqColor5.jpeg -m RGB
-python main.py -i ImagesSet/intensity-histeqColor6.jpeg -m RGB
-python main.py -i ImagesSet/intensity-histeqColor7.jpeg -m RGB
-python main.py -i ImagesSet/intensity-histeqColor8.jpeg -m RGB
-python main.py -i ImagesSet/intensity-histeqColor9.jpeg -m RGB
-python main.py -i ImagesSet/intensity-histeqColor10.jpeg -m RGB
+python main.py -i ImagesSet/intensity-histeqColor1.jpg -m LE
+python main.py -i ImagesSet/intensity-histeqColor2.jpg -m LE
+python main.py -i ImagesSet/intensity-histeqColor3.png -m LE
+python main.py -i ImagesSet/intensity-histeqColor4.jpeg -m LE
+python main.py -i ImagesSet/intensity-histeqColor5.jpeg -m LE
+python main.py -i ImagesSet/intensity-histeqColor6.jpeg -m LE
+python main.py -i ImagesSet/intensity-histeqColor7.jpeg -m LE
+python main.py -i ImagesSet/intensity-histeqColor8.jpeg -m LE
+python main.py -i ImagesSet/intensity-histeqColor9.jpeg -m LE
+python main.py -i ImagesSet/intensity-histeqColor10.jpeg -m LE
 
 # Morphological transformation
 python main.py -i ImagesSet/word_bw.bmp -m Erosion
