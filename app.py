@@ -4,7 +4,7 @@ from flask import Flask, request, render_template, send_from_directory
 import os
 from PIL import Image
 #从文件夹algorithm引入算法接口（Morphological_Transformation为形态学处理的代码）
-from algorithm import Morphological_Transformation, Fast_Fourier_Transform, Histogram_Equalization, Laplacian_Filter
+from algorithm import Morphological_Transformation, Histogram_Equalization, Laplacian_Filter
 import numpy as np
 import cv2
 import time
